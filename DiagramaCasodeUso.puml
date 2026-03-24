@@ -1,0 +1,31 @@
+``` plantuml
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Cliente" as C
+actor "Agente (Empresa/Banco)" as A
+
+rectangle "Sistema de Aluguel de Carros" {
+  (Efetuar Cadastro) as UC1
+  (Introduzir Pedido de Aluguel) as UC2
+  (Modificar Pedido) as UC3
+  (Consultar Pedido) as UC4
+  (Cancelar Pedido) as UC5
+  (Avaliar Pedido Financeiro) as UC6
+  (Executar Contrato) as UC7
+
+  C --> UC1
+  C --> UC2
+  C --> UC3
+  C --> UC4
+  C --> UC5
+
+  A --> UC3
+  A --> UC6
+  A --> UC7
+
+  UC2 ..> UC1 : <<include>>
+}
+@enduml
+```

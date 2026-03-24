@@ -1,0 +1,18 @@
+``` plantuml
+@startuml
+package "br.pucminas.aluguel" {
+    package "controller" {
+        note right: Construção Dinâmica\nde Páginas Web
+    }
+    package "service" {
+        note right: Gestão de Pedidos\ne Contratos
+    }
+    package "model" {
+        [Entities]
+        [Repositories]
+    }
+}
+controller --> service
+service --> model
+@enduml
+```

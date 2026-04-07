@@ -1,0 +1,77 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+abstract class Usuario {
+    # String login
+    # String senha
+}
+
+class Cliente extends Usuario {
+    - String rg
+    - String cpf
+    - String nome
+    - String endereco
+    - String profissao
+    - List<Double> rendimentos
+    --
+    + cadastrar()
+    + solicitarAluguel()
+}
+
+abstract class Agente extends Usuario {
+    - String nomeCNPJ
+    --
+    + avaliarPedido(pedido: PedidoAluguel)
+    + modificarPedido(pedido: PedidoAluguel)
+}
+
+class Empresa extends Agente {
+}
+
+class Banco extends Agente {
+    --
+    + concederCredito(pedido: PedidoAluguel)
+}
+
+class Automovel {
+    - String matricula
+    - int ano
+    - String marca
+    - String modelo
+    - String placa
+    - String proprietarioTipo
+}
+
+class PedidoAluguel {
+    - Long id
+    - Date dataInicio
+    - String status
+    - Double valorEstimado
+    --
+    + cancelar()
+    + modificar()
+}
+
+class Contrato {
+    - Long numeroContrato
+    - Date dataEmissao
+    - String termos
+    --
+    + gerarContrato()
+}
+
+class Credito {
+    - Double valorAprovado
+    - Integer parcelas
+    - Double taxaJuros
+}
+
+' Relacionamentos
+Cliente "1" -- "0..*" PedidoAluguel : solicita >
+Agente "1" -- "0..*" PedidoAluguel : avalia >
+PedidoAluguel "1" -- "1" Automovel : refere-se a >
+PedidoAluguel "1" -- "0..1" Contrato : gera >
+PedidoAluguel "1" -- "0..1" Credito : possui >
+Banco "1" -- "0..*" Credito : concede >
+
+@enduml

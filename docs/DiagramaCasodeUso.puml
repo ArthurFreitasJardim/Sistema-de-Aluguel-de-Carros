@@ -1,0 +1,54 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Cliente" as C
+actor "Empresa" as E
+actor "Banco" as B
+
+rectangle "Sistema de Aluguel de Carros" {
+  
+  package "Gestão de Usuários" {
+    (Efetuar Cadastro) as UC1
+  }
+
+  package "Gestão de Pedidos" {
+    (Introduzir Pedido de Aluguel) as UC2
+    (Modificar Pedido) as UC3
+    (Consultar Pedido) as UC4
+    (Cancelar Pedido) as UC5
+    (Avaliar Pedido Financeiro) as UC6
+  }
+
+  package "Gestão de Contratos" {
+    (Executar Contrato) as UC7
+    (Registrar Propriedade do Veículo) as UC8
+    (Conceder Crédito) as UC9
+  }
+
+
+  C --> UC1
+  C --> UC2
+  C --> UC3
+  C --> UC4
+  C --> UC5
+  
+
+  E --> UC3
+  E --> UC6
+  E --> UC7
+  E --> UC8
+  
+
+  B --> UC3
+  B --> UC6
+  B --> UC9
+  B --> UC7
+  B --> UC8
+
+
+  UC2 ..> UC1 : <<include>>
+  UC6 ..> UC2 : <<extend>>
+  UC9 ..> UC7 : <<extend>>
+}
+@enduml

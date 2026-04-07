@@ -1,0 +1,42 @@
+@startuml
+package "br.pucminas.caraluguel" {
+
+    package "controller" {
+        [ClienteController]
+        [PedidoController]
+        [ContratoController]
+    }
+
+    package "model" {
+        package "entity" {
+            [Cliente]
+            [Automovel]
+            [Pedido]
+            [Contrato]
+            [Agente]
+        }
+        package "repository" {
+            [ClienteRepository]
+            [PedidoRepository]
+        }
+    }
+
+    package "service" {
+        [AluguelService]
+        [FinanceiroService]
+    }
+
+    package "view" {
+        [PaginasDinamicas (Thymeleaf/React)]
+    }
+
+    ' Relacionamentos
+    controller ..> service : utiliza
+    service ..> repository : utiliza
+    repository ..> entity : gerencia
+    controller ..> view : renderiza
+}
+
+note right of view : Subsistema de construção\ndinâmica de páginas (Web)
+note right of model : Subsistema de gestão de\npedidos e contratos
+@enduml

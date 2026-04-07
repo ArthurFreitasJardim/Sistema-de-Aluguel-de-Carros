@@ -1,0 +1,43 @@
+@startuml
+skinparam componentStyle uml2
+
+package "Interface do Usuário (Web)" {
+    [Navegador Web] as Browser
+    component [View Engine (Thymeleaf/React)] as View
+}
+
+package "Aplicação Spring Boot (Backend)" {
+    
+    package "Camada de Controle" {
+        [Rest Controllers] as Controllers
+    }
+
+    package "Camada de Negócio" {
+        [Aluguel Service] as Service
+        [Regras de Avaliação] as BusinessRules
+    }
+
+    package "Camada de Persistência" {
+        [Spring Data JPA Repositories] as Repositories
+    }
+}
+
+database "Banco de Dados Relacional" as DB {
+    [Esquema de Aluguel] as Schema
+}
+
+package "Integrações Externas" {
+    [API Sistema Bancário] as BankAPI
+}
+
+' Relacionamentos
+Browser --> View : HTTP/HTTPS
+View --> Controllers : Request/Response
+Controllers --> Service : Chama lógica
+Service --> BusinessRules : Valida condições
+Service --> Repositories : Persiste dados
+Repositories --> Schema : SQL/JDBC
+Service ..> BankAPI : Consulta Crédito (Agentes)
+
+note right of Service : Gere pedidos, contratos\ne pareceres dos agentes
+@enduml

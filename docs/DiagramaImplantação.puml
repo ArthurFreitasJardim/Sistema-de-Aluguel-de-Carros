@@ -1,5 +1,5 @@
 @startuml
-title Diagrama de Implantação - Sistema de Aluguel de Carros
+title Diagrama de Implantação - Sistema Completo de Aluguel de Carros
 
 skinparam shadowing false
 skinparam dpi 150
@@ -18,29 +18,50 @@ skinparam cloud {
 }
 
 node "💻 Cliente\nNavegador Web" as Cliente {
-    artifact "HTML\nCSS\nJavaScript\nThymeleaf"
+    artifact "Portal do Cliente\nCadastro, Pedidos,\nConsulta, Cancelamento"
 }
 
-node "🌐 Servidor de Aplicação\nMicronaut + Netty" as App {
-    artifact "Controllers"
-    artifact "Services"
-    artifact "Repositories"
-    artifact "Views MVC"
-    artifact "Hibernate / JPA"
+node "🏢 Empresa Agente\nPortal Administrativo" as Empresa {
+    artifact "Avaliação de Pedido"
+    artifact "Gestão de Contratos"
+    artifact "Gestão de Veículos"
 }
 
-database "🗄️ Banco H2\nArquivo Local" as DB {
-    artifact "Pedido"
+node "🏦 Banco Agente\nPortal Financeiro" as Banco {
+    artifact "Análise Financeira"
+    artifact "Crédito"
+    artifact "Aprovação / Reprovação"
 }
 
-cloud "🚗 API Externa\nFIPE" as FIPE {
+node "🌐 Servidor de Aplicação\nMicronaut + MVC + Hibernate" as App {
+    artifact "Módulo Cadastro"
+    artifact "Módulo Pedidos"
+    artifact "Módulo Contratos"
+    artifact "Módulo Crédito"
+    artifact "Módulo Veículos"
+    artifact "Autenticação"
+}
+
+database "🗄️ Banco de Dados Central\nH2 / PostgreSQL" as DB {
+    artifact "Clientes"
+    artifact "Empresas"
+    artifact "Bancos"
+    artifact "Pedidos"
+    artifact "Contratos"
+    artifact "Crédito"
+    artifact "Veículos"
+}
+
+cloud "🚗 API FIPE" as FIPE {
     artifact "Marcas"
     artifact "Modelos"
 }
 
-Cliente --> App : HTTP/HTTPS\nlocalhost:8080
-App --> DB : JDBC / Hibernate
-Cliente --> FIPE : Fetch API\nJavaScript
-App --> FIPE : Integração indireta\nvia View
+Cliente --> App : HTTP/HTTPS\nPedidos e Consultas
+Empresa --> App : HTTP/HTTPS\nAvaliação e Gestão
+Banco --> App : HTTP/HTTPS\nAnálise Financeira
+App --> DB : JDBC / Hibernate ORM
+Cliente --> FIPE : Fetch API\nMarcas e Modelos
+Empresa --> FIPE : Consulta de Veículos
 
 @enduml

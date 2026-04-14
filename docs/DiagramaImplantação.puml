@@ -1,0 +1,46 @@
+@startuml
+title Diagrama de Implantação - Sistema de Aluguel de Carros
+
+skinparam shadowing false
+skinparam dpi 150
+skinparam defaultFontName Arial
+skinparam node {
+    BackgroundColor #E8F0FE
+    BorderColor #1E3A8A
+}
+skinparam database {
+    BackgroundColor #FEF3C7
+    BorderColor #D97706
+}
+skinparam cloud {
+    BackgroundColor #DCFCE7
+    BorderColor #16A34A
+}
+
+node "💻 Cliente\nNavegador Web" as Cliente {
+    artifact "HTML\nCSS\nJavaScript\nThymeleaf"
+}
+
+node "🌐 Servidor de Aplicação\nMicronaut + Netty" as App {
+    artifact "Controllers"
+    artifact "Services"
+    artifact "Repositories"
+    artifact "Views MVC"
+    artifact "Hibernate / JPA"
+}
+
+database "🗄️ Banco H2\nArquivo Local" as DB {
+    artifact "Pedido"
+}
+
+cloud "🚗 API Externa\nFIPE" as FIPE {
+    artifact "Marcas"
+    artifact "Modelos"
+}
+
+Cliente --> App : HTTP/HTTPS\nlocalhost:8080
+App --> DB : JDBC / Hibernate
+Cliente --> FIPE : Fetch API\nJavaScript
+App --> FIPE : Integração indireta\nvia View
+
+@enduml

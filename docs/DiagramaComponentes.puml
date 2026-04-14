@@ -1,43 +1,72 @@
 @startuml
-skinparam componentStyle uml2
+title Diagrama de Componentes - Sistema Completo de Aluguel de Carros
 
-package "Interface do Usuário (Web)" {
-    [Navegador Web] as Browser
-    component [View Engine (Thymeleaf/React)] as View
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam dpi 150
+skinparam defaultFontName Arial
+
+package "Frontend Web" {
+    [Portal Cliente]
+    [Portal Empresa]
+    [Portal Banco]
 }
 
-package "Aplicação Spring Boot (Backend)" {
-    
-    package "Camada de Controle" {
-        [Rest Controllers] as Controllers
-    }
+package "Backend Micronaut MVC" {
+    [AutenticacaoController]
+    [PedidoController]
+    [ContratoController]
+    [CreditoController]
+    [VeiculoController]
 
-    package "Camada de Negócio" {
-        [Aluguel Service] as Service
-        [Regras de Avaliação] as BusinessRules
-    }
+    [ClienteService]
+    [PedidoService]
+    [ContratoService]
+    [CreditoService]
+    [VeiculoService]
 
-    package "Camada de Persistência" {
-        [Spring Data JPA Repositories] as Repositories
-    }
+    [ClienteRepository]
+    [PedidoRepository]
+    [ContratoRepository]
+    [CreditoRepository]
+    [VeiculoRepository]
 }
 
-database "Banco de Dados Relacional" as DB {
-    [Esquema de Aluguel] as Schema
+database "Banco Relacional" {
+    [Clientes]
+    [Empresas]
+    [Bancos]
+    [Pedidos]
+    [Contratos]
+    [Creditos]
+    [Veiculos]
 }
 
-package "Integrações Externas" {
-    [API Sistema Bancário] as BankAPI
+cloud "API FIPE" {
+    [Marcas]
+    [Modelos]
 }
 
-' Relacionamentos
-Browser --> View : HTTP/HTTPS
-View --> Controllers : Request/Response
-Controllers --> Service : Chama lógica
-Service --> BusinessRules : Valida condições
-Service --> Repositories : Persiste dados
-Repositories --> Schema : SQL/JDBC
-Service ..> BankAPI : Consulta Crédito (Agentes)
+[Portal Cliente] --> [PedidoController]
+[Portal Empresa] --> [ContratoController]
+[Portal Banco] --> [CreditoController]
 
-note right of Service : Gere pedidos, contratos\ne pareceres dos agentes
+[PedidoController] --> [PedidoService]
+[ContratoController] --> [ContratoService]
+[CreditoController] --> [CreditoService]
+[VeiculoController] --> [VeiculoService]
+
+[PedidoService] --> [PedidoRepository]
+[ContratoService] --> [ContratoRepository]
+[CreditoService] --> [CreditoRepository]
+[VeiculoService] --> [VeiculoRepository]
+
+[PedidoRepository] --> [Pedidos]
+[ContratoRepository] --> [Contratos]
+[CreditoRepository] --> [Creditos]
+[VeiculoRepository] --> [Veiculos]
+
+[Portal Cliente] --> [API FIPE]
+[Portal Empresa] --> [API FIPE]
+
 @enduml

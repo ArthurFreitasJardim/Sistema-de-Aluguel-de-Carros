@@ -1,0 +1,72 @@
+@startuml
+title Diagrama de Componentes - Sistema Completo de Aluguel de Carros
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam dpi 150
+skinparam defaultFontName Arial
+
+package "Frontend Web" {
+    [Portal Cliente]
+    [Portal Empresa]
+    [Portal Banco]
+}
+
+package "Backend Micronaut MVC" {
+    [AutenticacaoController]
+    [PedidoController]
+    [ContratoController]
+    [CreditoController]
+    [VeiculoController]
+
+    [ClienteService]
+    [PedidoService]
+    [ContratoService]
+    [CreditoService]
+    [VeiculoService]
+
+    [ClienteRepository]
+    [PedidoRepository]
+    [ContratoRepository]
+    [CreditoRepository]
+    [VeiculoRepository]
+}
+
+database "Banco Relacional" {
+    [Clientes]
+    [Empresas]
+    [Bancos]
+    [Pedidos]
+    [Contratos]
+    [Creditos]
+    [Veiculos]
+}
+
+cloud "API FIPE" {
+    [Marcas]
+    [Modelos]
+}
+
+[Portal Cliente] --> [PedidoController]
+[Portal Empresa] --> [ContratoController]
+[Portal Banco] --> [CreditoController]
+
+[PedidoController] --> [PedidoService]
+[ContratoController] --> [ContratoService]
+[CreditoController] --> [CreditoService]
+[VeiculoController] --> [VeiculoService]
+
+[PedidoService] --> [PedidoRepository]
+[ContratoService] --> [ContratoRepository]
+[CreditoService] --> [CreditoRepository]
+[VeiculoService] --> [VeiculoRepository]
+
+[PedidoRepository] --> [Pedidos]
+[ContratoRepository] --> [Contratos]
+[CreditoRepository] --> [Creditos]
+[VeiculoRepository] --> [Veiculos]
+
+[Portal Cliente] --> [API FIPE]
+[Portal Empresa] --> [API FIPE]
+
+@enduml

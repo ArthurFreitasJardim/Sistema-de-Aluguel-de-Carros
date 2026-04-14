@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Novo Pedido</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+        }
+
+        .header {
+            background: #1e3a8a;
+            color: white;
+            padding: 20px 40px;
+        }
+
+        .container {
+            width: 520px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 14px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h2>🚗 Sistema de Aluguel de Carros</h2>
+    <p>👤 Visão do Cliente</p>
+</div>
+
+<div class="container">
+    <h2>Novo Pedido</h2>
+
+    <form action="/pedidos/salvar" method="post">
+        <label>Nome do Cliente</label>
+        <input type="text" name="clienteNome" required>
+
+        <label>Marca</label>
+        <select id="marca" required>
+            <option value="">Carregando marcas...</option>
+        </select>
+
+        <label>Modelo</label>
+        <select id="modelo" required>
+            <option value="">Selecione a marca primeiro</option>
+        </select>
+
+        <input type="hidden" name="carro" id="carroCompleto">
+
+        <label>Quantidade de Dias</label>
+        <input type="number" name="dias" min="1" required>
+
+        <button type="submit">Salvar Pedido</button>
+    </form>
+</div>
+
+<script>
+    const marcaSelect = document.getElementById("marca");
+    const modeloSelect = document.getElementById("modelo");
+    const hiddenCarro = document.getElementById("carroCompleto");
+    const form = document.querySelector("form");
+
+    async function carregarMarcas() {
+        const response = await fetch("https://parallelum.com.br/fipe/api/v1/carros/marcas");
+        const marcas = await response.json();
+
+        marcaSelect.innerHTML = '<option value="">Selecione uma marca</option>';
+
+        marcas.forEach(marca => {
+            marcaSelect.innerHTML +=
+                `<option value="${marca.codigo}">${marca.nome}</option>`;
+        });
+    }
+
+    async function carregarModelos(marcaId) {
+        const response = await fetch(
+            `https://parallelum.com.br/fipe/api/v1/carros/marcas/${marcaId}/modelos`
+        );
+
+        const data = await response.json();
+
+        modeloSelect.innerHTML = '<option value="">Selecione um modelo</option>';
+
+        data.modelos.forEach(modelo => {
+            modeloSelect.innerHTML +=
+                `<option value="${modelo.nome}">${modelo.nome}</option>`;
+        });
+    }
+
+    marcaSelect.addEventListener("change", function () {
+        if (this.value) {
+            carregarModelos(this.value);
+        }
+    });
+
+    form.addEventListener("submit", function () {
+        const marcaNome = marcaSelect.options[marcaSelect.selectedIndex].text;
+        const modeloNome = modeloSelect.value;
+        hiddenCarro.value = marcaNome + " - " + modeloNome;
+    });
+
+    carregarMarcas();
+</script>
+
+</body>
+</html>

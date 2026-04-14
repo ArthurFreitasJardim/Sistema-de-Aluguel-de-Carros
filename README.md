@@ -1,19 +1,244 @@
-# 🚗 Sistema de Aluguel de Carros - Lab 02 (Sprint 1)
+# 🚗 Sistema de Aluguel de Carros
 
-[cite_start]Este repositório contém a modelagem inicial e o desenvolvimento de um sistema web para gestão de aluguéis de automóveis[cite: 6]. [cite_start]O projeto segue a arquitetura **MVC** e é desenvolvido em **Java**[cite: 24].
+Sistema web desenvolvido em **Java 17 + Micronaut (MVC)** para gerenciamento de pedidos de aluguel de carros.
 
-------------------------------------------------------------------------
+O projeto foi construído como atividade de laboratório, evoluindo por sprints com foco em:
 
-## 📋 Histórias de Usuário (User Stories)
+* arquitetura MVC
+* CRUD completo de pedidos
+* persistência com Hibernate + H2
+* interface web com Thymeleaf
+* integração com API FIPE
+* boas práticas de manutenção e escalabilidade
 
-| ID | Ator | Descrição | Critério de Aceitação |
-| :--- | :--- | :--- | :--- |
-| **US01** | Cliente | [cite_start]Como cliente, quero me cadastrar informando meus dados pessoais e rendimentos para acessar o sistema[cite: 9, 10]. | [cite_start]Validar obrigatoriedade de RG, CPF, Nome, Endereço e Profissão [cite: 13][cite_start]; permitir o cadastro de no máximo 3 fontes de rendimento[cite: 13]. |
-| **US02** | Cliente | [cite_start]Como cliente, quero solicitar o aluguel de um automóvel através da Internet[cite: 6, 10]. | [cite_start]O pedido deve registrar matrícula, ano, marca, modelo e placa do veículo[cite: 15]. |
-| **US03** | Agente | [cite_start]Como agente (banco/empresa), quero avaliar financeiramente os pedidos de aluguel[cite: 11, 12]. | [cite_start]O contrato só deve ser executado para consideração após parecer positivo do agente[cite: 12]. |
-| **US04** | Banco | [cite_start]Como banco agente, quero associar um contrato de crédito a um pedido de aluguel[cite: 16]. | [cite_start]O sistema deve permitir vincular o crédito concedido especificamente por um banco agente ao aluguel[cite: 16]. |
-| **US05** | Cliente | [cite_start]Como cliente, quero modificar ou cancelar meus pedidos de aluguel pendentes[cite: 10]. | [cite_start]Permitir alterações ou cancelamentos apenas em pedidos que ainda não foram convertidos em contratos executados[cite: 6]. |
-| **US06** | Agente | [cite_start]Como agente, quero modificar pedidos de aluguel[cite: 11]. | [cite_start]O sistema deve permitir que empresas e bancos alterem detalhes do pedido durante a fase de avaliação[cite: 11]. |
-| **US07** | Sistema | [cite_start]Como sistema, quero registrar a propriedade do automóvel conforme o tipo de contrato[cite: 14]. | [cite_start]Dependendo do contrato, o veículo deve ser registrado como propriedade do cliente, empresa ou banco[cite: 14]. |
+---
 
-------------------------------------------------------------------------
+# 🎯 Objetivo do Projeto
+
+Permitir que clientes realizem pedidos de aluguel de carros de forma simples, escolhendo:
+
+* nome do cliente
+* marca do carro
+* modelo do carro
+* quantidade de dias
+
+Além disso, o sistema permite:
+
+* ✅ criar pedido
+* ✏️ editar pedido
+* ❌ cancelar pedido
+* 📋 listar pedidos
+* 🚗 buscar marcas e modelos reais via API FIPE
+
+---
+
+# 🛠️ Tecnologias Utilizadas
+
+## Backend
+
+* **Java 17**
+* **Micronaut 4.6.2**
+* **Hibernate / JPA**
+* **Gradle Kotlin DSL**
+* **Lombok**
+
+## Frontend
+
+* **HTML5**
+* **CSS3**
+* **JavaScript**
+* **Thymeleaf**
+
+## Banco de Dados
+
+* **H2 Database**
+* persistência em arquivo local
+
+## API Externa
+
+* **API FIPE (Parallelum)**
+
+---
+
+# 🧱 Arquitetura
+
+O sistema segue o padrão **MVC (Model-View-Controller)**.
+
+```text
+Controller → recebe requisições HTTP
+Service    → regras de negócio
+Repository → acesso ao banco
+Model      → entidades JPA
+View       → páginas HTML Thymeleaf
+```
+
+## Estrutura de Pastas
+
+```text
+src/main/java/com/example
+├── controller
+├── service
+├── repository
+└── model
+
+src/main/resources/views
+├── pedido-form.html
+├── pedido-editar.html
+└── pedido-lista.html
+```
+
+---
+
+# ▶️ Como Executar o Projeto
+
+## ✅ Pré-requisitos
+
+Instale:
+
+* **JDK 17**
+* Git
+
+Verifique:
+
+```bash
+java -version
+```
+
+Deve aparecer Java 17.
+
+---
+
+## 📥 Clonar Repositório
+
+```bash
+git clone <URL_DO_REPOSITORIO>
+cd Sistema-de-Aluguel-de-Carros/demo
+```
+
+---
+
+## ▶️ Executar
+
+### Windows
+
+```powershell
+.\gradlew.bat run
+```
+
+### Linux / Mac
+
+```bash
+./gradlew run
+```
+
+---
+
+## 🌐 Acessar no Navegador
+
+```text
+http://localhost:8080/pedidos/lista
+```
+
+---
+
+# 💾 Banco de Dados
+
+O projeto usa **H2 em arquivo local**, configurado em:
+
+```properties
+datasources.default.url=jdbc:h2:file:./data/alugueldb
+```
+
+Arquivo gerado automaticamente:
+
+```text
+data/alugueldb.mv.db
+```
+
+## 🧹 Resetar banco para testes
+
+Apague a pasta:
+
+```text
+data/
+```
+
+Ao executar novamente, o banco será recriado automaticamente.
+
+---
+
+# 🚗 Integração com API FIPE
+
+O formulário consome a API FIPE para preencher:
+
+* marcas
+* modelos
+
+Exemplo de fluxo:
+
+1. usuário seleciona a marca
+2. sistema busca modelos da marca
+3. pedido salva no formato:
+
+```text
+Toyota - Corolla
+```
+
+Isso permite edição automática de marca e modelo depois.
+
+---
+
+# ✨ Funcionalidades Implementadas
+
+* ✅ CRUD de pedidos
+* ✅ validação de dias (mínimo 1)
+* ✅ cancelamento por POST
+* ✅ integração com API FIPE
+* ✅ persistência local
+* ✅ interface web estilizada
+* ✅ separação em camadas MVC
+
+---
+
+# 🔮 Melhorias Futuras
+
+* módulo empresa
+* módulo banco/aprovação
+* autenticação de usuários
+* PostgreSQL
+* deploy em nuvem
+* dashboard administrativo
+* relatórios
+
+---
+
+# 📌 Histórias de Usuário
+
+## Sprint 1 — Modelagem
+
+* Como analista, quero modelar o domínio do sistema para representar pedidos de aluguel.
+* Como equipe, queremos documentar casos de uso, classes e implantação.
+
+## Sprint 2 — Backend CRUD
+
+* Como cliente, quero cadastrar um pedido de aluguel.
+* Como cliente, quero listar meus pedidos.
+* Como cliente, quero editar um pedido existente.
+* Como cliente, quero cancelar um pedido.
+
+## Sprint 3 — Frontend + Integração
+
+* Como cliente, quero uma interface web simples e bonita.
+* Como cliente, quero escolher marca e modelo reais via API.
+* Como cliente, quero que a edição preserve marca e modelo.
+
+## Sprint 4 — Evolução futura
+
+* Como empresa, quero visualizar pedidos recebidos.
+* Como banco/parceiro, quero aprovar ou reprovar pagamentos.
+
+---
+
+# 👨‍💻 Autor
+
+Projeto desenvolvido por **Arthur Freitas Jardim** para a disciplina de laboratório / engenharia de software.

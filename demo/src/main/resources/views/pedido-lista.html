@@ -1,179 +1,109 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Pedidos</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            margin: 0;
-        }
-
-        .header {
-            background: linear-gradient(90deg, #1e3a8a, #2563eb);
-            color: white;
-            padding: 20px 40px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .container {
-            margin: 40px;
-            background: white;
-            padding: 30px;
-            border-radius: 14px;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
-        }
-
-        .top-actions {
-            margin-bottom: 20px;
-        }
-
-        .novo {
-            background: #2563eb;
-            color: white;
-            padding: 12px 18px;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: 0.2s;
-        }
-
-        .novo:hover {
-            background: #1d4ed8;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            overflow: hidden;
-            border-radius: 10px;
-        }
-
-        th {
-            background: #2563eb;
-            color: white;
-            padding: 14px;
-        }
-
-        td {
-            padding: 14px;
-            border-bottom: 1px solid #ddd;
-            text-align: center;
-        }
-
-        tr:hover {
-            background: #f9fafb;
-        }
-
-        .status {
-            font-weight: bold;
-            color: #d97706;
-        }
-
-        .cancelado {
-            color: #dc2626;
-            font-weight: bold;
-        }
-
-        .editar {
-            color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            text-decoration: none;
-            margin-right: 6px;
-            background: #16a34a;
-            transition: 0.2s;
-        }
-
-        .editar:hover {
-            background: #15803d;
-        }
-
-        .cancelar {
-            background: #dc2626;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .cancelar:hover {
-            background: #b91c1c;
-        }
-
-        .encerrado {
-            color: #6b7280;
-            font-style: italic;
-        }
-
-        form {
-            display: inline;
-        }
-    </style>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Pedidos | Locação Premium</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
 </head>
 <body>
 
 <div class="header">
-    <h2>🚗 Sistema de Aluguel de Carros</h2>
-    <p>👤 Visão do Cliente | Gestão de Pedidos</p>
+    <a class="logo" href="/pedidos/">AluguelCar</a>
+
+    <div class="nav">
+        <!-- O Menu foi mantido focado apenas no cliente logado nesta visão -->
+        <span class="profile-wrapper">
+            <button class="profile-button" th:text="${#strings.substring(usuarioNome,0,1)}">C</button>
+            <div class="dropdown">
+                <a href="/pedidos/lista">Meus pedidos</a>
+                <a href="/contratos/lista">Contratos vigentes</a>
+                <a href="/conta/dados">Dados da conta</a>
+                <a href="/sair" onclick="setTimeout(() => location.reload(), 200)">Sair</a>
+            </div>
+        </span>
+    </div>
 </div>
 
 <div class="container">
-    <div class="top-actions">
-        <a href="/pedidos/" class="novo">+ Novo Pedido</a>
+    <div class="hero" style="padding: 40px 0 30px; text-align: left;">
+        <h1>Meus Pedidos</h1>
+        <p>Acompanhe o status e gerencie suas solicitações de locação.</p>
     </div>
 
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Cliente</th>
-            <th>Carro</th>
-            <th>Dias</th>
-            <th>Status</th>
-            <th>Ações</th>
-        </tr>
+    <div class="table-card">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Ano</th>
+                    <th>Placa</th>
+                    <th>Dias</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="pedido : ${pedidos}">
+                    <td th:text="${pedido.id}"></td>
+                    <td th:text="${pedido.marca}"></td>
+                    <td th:text="${pedido.modelo}" style="font-weight: 600; color: #111827;"></td>
+                    <td th:text="${pedido.ano}"></td>
+                    <td th:text="${pedido.placa}"></td>
+                    <td th:text="${pedido.dias}"></td>
 
-        <tr th:each="pedido : ${pedidos}">
-            <td th:text="${pedido.id}"></td>
-            <td th:text="${pedido.clienteNome}"></td>
-            <td th:text="${pedido.carro}"></td>
-            <td th:text="${pedido.dias}"></td>
+                    <!-- Status com Badges (Pills) -->
+                    <td>
+                        <span th:if="${pedido.status.name() == 'CANCELADO'}" class="badge badge-danger">CANCELADO</span>
+                        <span th:if="${pedido.status.name() == 'CONTRATO_GERADO'}" class="badge badge-success">CONTRATO ATIVO</span>
+                        <span th:if="${pedido.status.name() != 'CANCELADO' and pedido.status.name() != 'CONTRATO_GERADO'}" 
+                              class="badge badge-neutral" 
+                              th:text="${pedido.status}">
+                        </span>
+                    </td>
 
-            <td>
-                <span th:if="${pedido.status == 'CANCELADO'}" class="cancelado">
-                    CANCELADO
-                </span>
+                    <!-- Ações -->
+                    <td>
+                        <div class="actions" 
+                             th:if="${pedido.status.name() != 'CANCELADO' 
+                                  and pedido.status.name() != 'APROVADO' 
+                                  and pedido.status.name() != 'CONTRATO_GERADO'}">
 
-                <span th:if="${pedido.status != 'CANCELADO'}"
-                      class="status"
-                      th:text="${pedido.status}">
-                </span>
-            </td>
+                            <a class="btn btn-secondary btn-sm" th:href="@{/pedidos/editar/{id}(id=${pedido.id})}">
+                                Editar
+                            </a>
 
-            <td>
-                <span th:if="${pedido.status == 'CANCELADO'}" class="encerrado">
-                    Pedido encerrado
-                </span>
+                            <form action="/pedidos/cancelar" method="post" style="margin: 0;">
+                                <input type="hidden" name="id" th:value="${pedido.id}">
+                                <button class="btn btn-danger btn-sm" 
+                                        onclick="return confirm('Tem certeza que deseja cancelar esta reserva?')">
+                                    Cancelar
+                                </button>
+                            </form>
+                        </div>
 
-                <span th:if="${pedido.status != 'CANCELADO'}">
-                    <a th:href="@{/pedidos/editar/{id}(id=${pedido.id})}" class="editar">
-                        Editar
-                    </a>
+                        <!-- Textos de Feedback -->
+                        <span th:if="${pedido.status.name() == 'CANCELADO'}" class="text-muted-sm">
+                            Encerrado
+                        </span>
 
-                    <form action="/pedidos/cancelar" method="post">
-                        <input type="hidden" name="id" th:value="${pedido.id}">
-                        <button type="submit"
-                                class="cancelar"
-                                onclick="return confirm('Tem certeza que deseja cancelar este pedido?');">
-                            Cancelar
-                        </button>
-                    </form>
-                </span>
-            </td>
-        </tr>
-    </table>
+                        <span th:if="${pedido.status.name() == 'APROVADO'}" class="text-muted-sm">
+                            Aprovado (Aguardando)
+                        </span>
+
+                        <span th:if="${pedido.status.name() == 'CONTRATO_GERADO'}" class="text-muted-sm" style="color: #10b981; font-weight: 600;">
+                            Em vigor
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 </body>

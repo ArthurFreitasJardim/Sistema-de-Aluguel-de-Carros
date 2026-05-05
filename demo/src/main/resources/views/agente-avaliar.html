@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliar Pedido | Painel do Agente</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
+</head>
+<body>
+
+<div class="header">
+    <a class="logo" href="/pedidos/">AluguelCar</a>
+
+    <div class="nav">
+        <a class="btn btn-secondary btn-sm" href="/agente/pedidos">Voltar ao Painel</a>
+        
+        <span class="profile-wrapper" style="margin-left: 16px;">
+            <button class="profile-button">A</button>
+            <div class="dropdown">
+                <a href="/agente/pedidos">Gestão de Pedidos</a>
+                <a href="/contratos/lista">Gestão de Contratos</a>
+                <a href="/sair" onclick="setTimeout(() => location.reload(), 200)">Sair</a>
+            </div>
+        </span>
+    </div>
+</div>
+
+<div class="container">
+    <div class="form-box" style="max-width: 760px;">
+        <div class="form-header">
+            <h1>Avaliação de Pedido</h1>
+            <p>Revise os dados da solicitação e emita o parecer técnico e financeiro.</p>
+        </div>
+
+        <!-- Resumo do Pedido (Somente Leitura) -->
+        <h3 style="font-size: 14px; margin-bottom: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Dados da Solicitação</h3>
+        
+        <div class="specs-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 32px; background: #f8fafc; border: 1px solid var(--border-light);">
+            <div class="spec-item">
+                <span>Cliente Solicitante</span>
+                <strong th:text="${pedido.clienteNome}"></strong>
+            </div>
+            <div class="spec-item">
+                <span>CPF do Cliente</span>
+                <strong th:text="${pedido.clienteCpf}"></strong>
+            </div>
+            <div class="spec-item">
+                <span>Período de Locação</span>
+                <strong th:text="${pedido.dias} + ' dias'"></strong>
+            </div>
+            <div class="spec-item" style="grid-column: span 2;">
+                <span>Veículo Solicitado</span>
+                <strong th:text="${pedido.carro}"></strong>
+            </div>
+            <div class="spec-item">
+                <span>Placa do Veículo</span>
+                <strong th:text="${pedido.placa}"></strong>
+            </div>
+        </div>
+
+        <!-- Formulário de Avaliação -->
+        <form action="/agente/avaliar" method="post">
+            <input type="hidden" name="id" th:value="${pedido.id}">
+
+            <h3 style="font-size: 16px; margin-bottom: 16px; color: var(--text-primary);">1. Parecer Técnico</h3>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="agente">Agente Responsável</label>
+                    <input type="text" id="agente" name="agente" placeholder="Seu nome ou matrícula" required>
+                </div>
+                <div class="form-group">
+                    <label for="aprovado">Resultado Final</label>
+                    <select id="aprovado" name="aprovado" required>
+                        <option value="" disabled selected>Selecione uma decisão...</option>
+                        <option value="true">✅ Aprovar Pedido</option>
+                        <option value="false">❌ Reprovar Pedido</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="parecer">Justificativa / Parecer</label>
+                <textarea id="parecer" name="parecer" rows="4" placeholder="Descreva os motivos da aprovação ou reprovação..." required></textarea>
+            </div>
+
+            <hr class="divider" style="margin: 32px 0;">
+
+            <h3 style="font-size: 16px; margin-bottom: 16px; color: var(--text-primary);">2. Análise de Crédito</h3>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="possuiCredito">Possui crédito bancário?</label>
+                    <select id="possuiCredito" name="possuiCredito" required>
+                        <option value="false">Não</option>
+                        <option value="true">Sim</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="bancoAgente">Banco Emissor do Crédito</label>
+                    <input type="text" id="bancoAgente" name="bancoAgente" placeholder="Ex: Itaú, Santander...">
+                </div>
+            </div>
+
+            <div class="form-group" style="max-width: 50%;">
+                <label for="valorCredito">Valor do Crédito Aprovado (R$)</label>
+                <input type="number" id="valorCredito" step="0.01" name="valorCredito" placeholder="Ex: 15000.00">
+            </div>
+
+            <button class="btn btn-primary" type="submit" style="width: 100%; margin-top: 24px; padding: 14px;">
+                Registrar Avaliação
+            </button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

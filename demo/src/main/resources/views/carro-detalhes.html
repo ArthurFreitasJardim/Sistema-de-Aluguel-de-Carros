@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Detalhes ' + ${carro.marca} + ' ' + ${carro.modelo} + ' | Locação Premium'">Detalhes do Veículo</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
+</head>
+<body>
+
+<div class="header">
+    <a class="logo" href="/pedidos/">AluguelCar</a>
+
+    <div class="nav">
+        <span th:if="${perfil == 'CLIENTE'}" class="profile-wrapper">
+            <button class="profile-button" th:text="${#strings.substring(usuarioNome,0,1)}">C</button>
+            <div class="dropdown">
+                <a href="/pedidos/lista">Meus pedidos</a>
+                <a href="/contratos/lista">Contratos vigentes</a>
+                <a href="/conta/dados">Dados da conta</a>
+                <a href="/sair">Sair</a>
+            </div>
+        </span>
+
+        <span th:if="${perfil == 'ADMIN'}" class="profile-wrapper">
+            <button class="profile-button">A</button>
+            <div class="dropdown">
+                <a href="/agente/pedidos">Gestão de Pedidos</a>
+                <a href="/contratos/lista">Gestão de Contratos</a>
+                <a href="/sair">Sair</a>
+            </div>
+        </span>
+
+        <span th:if="${perfil == 'VISITANTE' or perfil == null}" class="actions">
+            <a class="btn btn-secondary btn-sm" href="/login">Acessar</a>
+            <a class="btn btn-primary btn-sm" href="/cadastro">Criar Conta</a>
+        </span>
+    </div>
+</div>
+
+<div class="container details-container">
+    <a href="/pedidos/" class="btn btn-secondary btn-sm back-link">
+        &larr; Voltar ao Catálogo
+    </a>
+
+    <div class="details-layout">
+        <div class="details-image">
+            <div class="carousel">
+                <button class="carousel-btn carousel-prev" type="button" onclick="mudarImagem(-1)">&#10094;</button>
+
+                <img id="carouselImage"
+                     th:src="${carro.imagensUrl[0]}"
+                     alt="Imagem do veículo">
+
+                <button class="carousel-btn carousel-next" type="button" onclick="mudarImagem(1)">&#10095;</button>
+            </div>
+
+            <div class="carousel-thumbs">
+                <img th:each="img, iter : ${carro.imagensUrl}"
+                     th:src="${img}"
+                     th:attr="data-index=${iter.index}"
+                     onclick="selecionarImagem(this)">
+            </div>
+        </div>
+
+        <div class="details-info">
+            <div class="title-header">
+                <h1 th:text="${carro.marca + ' ' + carro.modelo}"></h1>
+                <p th:text="${carro.descricao}"></p>
+            </div>
+
+            <div class="price-big">
+                R$ <span th:text="${#numbers.formatDecimal(carro.precoDiaria, 1, 2)}"></span>
+                <span>/ dia</span>
+            </div>
+
+            <div class="specs-grid details-specs">
+                <div class="spec-item">
+                    <span>Ano de Fabricação</span>
+                    <strong th:text="${carro.ano}"></strong>
+                </div>
+
+                <div class="spec-item">
+                    <span>Quilometragem</span>
+                    <strong th:text="${carro.km}"></strong>
+                </div>
+
+                <div class="spec-item">
+                    <span>Matrícula</span>
+                    <strong th:text="${carro.matricula}"></strong>
+                </div>
+
+                <div class="spec-item">
+                    <span>Placa</span>
+                    <strong th:text="${carro.placa}"></strong>
+                </div>
+
+                <div class="spec-item details-full">
+                    <span>Tipo do Proprietário</span>
+                    <strong th:text="${carro.proprietarioTipo}"></strong>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <form action="/pedidos/salvar" method="post" class="booking-form">
+                <input type="hidden" name="carroCodigo" th:value="${carro.codigo}">
+
+                <div class="form-group">
+                    <label for="dias">Período de Locação</label>
+                    <input type="number" id="dias" name="dias" min="1" required placeholder="Quantos dias deseja alugar?">
+                </div>
+
+                <button class="btn btn-primary booking-button" type="submit">
+                    Solicitar Reserva Agora
+                </button>
+
+                <p class="muted" th:if="${perfil == 'VISITANTE' or perfil == null}">
+                    Você será direcionado para login antes de concluir o pedido.
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    const imagens = /*[[${carro.imagensUrl}]]*/ [];
+    let indiceAtual = 0;
+
+    function atualizarCarousel() {
+        const imagemPrincipal = document.getElementById("carouselImage");
+        imagemPrincipal.src = imagens[indiceAtual];
+
+        document.querySelectorAll(".carousel-thumbs img").forEach(img => {
+            img.classList.remove("active-thumb");
+        });
+
+        const thumbAtual = document.querySelector(`.carousel-thumbs img[data-index="${indiceAtual}"]`);
+
+        if (thumbAtual) {
+            thumbAtual.classList.add("active-thumb");
+        }
+    }
+
+    function mudarImagem(direcao) {
+        indiceAtual += direcao;
+
+        if (indiceAtual < 0) {
+            indiceAtual = imagens.length - 1;
+        }
+
+        if (indiceAtual >= imagens.length) {
+            indiceAtual = 0;
+        }
+
+        atualizarCarousel();
+    }
+
+    function selecionarImagem(elemento) {
+        indiceAtual = Number(elemento.getAttribute("data-index"));
+        atualizarCarousel();
+    }
+
+    atualizarCarousel();
+</script>
+
+</body>
+</html>

@@ -6,4 +6,5 @@ import io.micronaut.data.repository.CrudRepository;
 
 @Repository
 public interface PedidoRepository extends CrudRepository<Pedido, Long> {
+    Iterable<Pedido> findByUsuarioId(Long usuarioId);
 }

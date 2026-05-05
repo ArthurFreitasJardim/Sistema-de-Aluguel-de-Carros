@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar | Locação Premium</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
+</head>
+<body>
+
+<div class="header">
+    <a class="logo" href="/pedidos/">AluguelCar</a>
+
+    <div class="nav">
+        <a class="btn btn-secondary btn-sm" href="/pedidos/">Catálogo</a>
+        <a class="btn btn-primary btn-sm" href="/cadastro">Criar Conta</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="form-box">
+        <div class="form-header">
+            <h1>Acesse sua conta</h1>
+            <p>Faça login para solicitar ou gerenciar suas reservas.</p>
+        </div>
+
+        <!-- Alerta de Erro -->
+        <div th:if="${erro != null and erro != ''}" class="alert-error">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="min-width: 20px;">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span th:text="${erro}"></span>
+        </div>
+
+        <form action="/login" method="post">
+            <div class="form-group">
+                <label for="email">E-mail corporativo ou pessoal</label>
+                <input type="email" id="email" name="email" placeholder="nome@exemplo.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="senha">Sua senha secreta</label>
+                <input type="password" id="senha" name="senha" placeholder="••••••••" required>
+            </div>
+
+            <button class="btn btn-primary" type="submit" style="width: 100%; margin-top: 8px;">
+                Entrar
+            </button>
+        </form>
+
+        <div class="dev-note">
+            <strong>Acesso Agente:</strong> admin123@email.com / 123456
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

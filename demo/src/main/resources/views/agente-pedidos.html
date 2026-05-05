@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Agente | Locação Premium</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
+</head>
+<body>
+
+<div class="header">
+    <a class="logo" href="/pedidos/">AluguelCar</a>
+
+    <div class="nav">
+        <span class="profile-wrapper">
+            <button class="profile-button">A</button>
+            <div class="dropdown">
+                <a href="/agente/pedidos">Gestão de Pedidos</a>
+                <a href="/contratos/lista">Gestão de Contratos</a>
+                <a href="/sair" onclick="setTimeout(() => location.reload(), 200)">Sair</a>
+            </div>
+        </span>
+    </div>
+</div>
+
+<div class="container">
+    <div class="hero" style="padding: 40px 0 30px; text-align: left;">
+        <h1>Avaliação de Pedidos</h1>
+        <p>Painel administrativo para análise de crédito e aprovação de novas locações.</p>
+    </div>
+
+    <div class="table-card">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>CPF</th>
+                    <th>Veículo Solicitado</th>
+                    <th>Dias</th>
+                    <th>Status Atual</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="pedido : ${pedidos}">
+                    <td th:text="'#' + ${pedido.id}" style="font-weight: 700; color: #111827;"></td>
+                    <td th:text="${pedido.clienteNome}" style="font-weight: 500; color: #111827;"></td>
+                    <td th:text="${pedido.clienteCpf}"></td>
+                    <td th:text="${pedido.carro}"></td>
+                    <td th:text="${pedido.dias}"></td>
+                    
+                    <!-- O Status ganha o visual de Badge (Pílula) para leitura limpa -->
+                    <td>
+                        <span class="badge badge-neutral" th:text="${pedido.status}"></span>
+                    </td>
+                    
+                    <!-- Ação com botões proporcionais e textos discretos -->
+                    <td>
+                        <a class="btn btn-primary btn-sm"
+                           th:if="${pedido.status.name() == 'EM_ANALISE' or pedido.status.name() == 'ALTERADO_PELO_CLIENTE'}"
+                           th:href="@{/agente/avaliar/{id}(id=${pedido.id})}">
+                            Avaliar
+                        </a>
+
+                        <span class="text-muted-sm"
+                              th:if="${pedido.status.name() != 'EM_ANALISE' and pedido.status.name() != 'ALTERADO_PELO_CLIENTE'}">
+                            Finalizado
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

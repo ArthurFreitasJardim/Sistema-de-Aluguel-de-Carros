@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dados da Conta | Locação Premium</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
+</head>
+<body>
+
+<div class="header">
+    <a class="logo" href="/pedidos/">AluguelCar</a>
+
+    <div class="nav">
+        <span class="profile-wrapper">
+            <button class="profile-button" th:text="${#strings.substring(usuarioNome,0,1)}">C</button>
+            <div class="dropdown">
+                <a href="/pedidos/lista">Meus pedidos</a>
+                <a href="/contratos/lista">Contratos vigentes</a>
+                <a href="/conta/dados">Dados da conta</a>
+                <a href="/sair" onclick="setTimeout(() => location.reload(), 200)">Sair</a>
+            </div>
+        </span>
+    </div>
+</div>
+
+<div class="container account-container">
+    <div class="hero" style="padding: 40px 0 30px; text-align: left;">
+        <h1>Perfil do Usuário</h1>
+        <p>Informações de cadastro utilizadas automaticamente em seus contratos de locação.</p>
+    </div>
+
+    <div class="account-card">
+        <div class="account-section">
+            <h2 class="section-title">Identificação Pessoal</h2>
+            
+            <div class="data-grid">
+                <div class="data-item">
+                    <span class="data-label">Nome Completo</span>
+                    <strong class="data-value" th:text="${usuario.nome}"></strong>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">E-mail</span>
+                    <strong class="data-value" th:text="${usuario.email}"></strong>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">CPF</span>
+                    <strong class="data-value" th:text="${usuario.cpf}"></strong>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">RG</span>
+                    <strong class="data-value" th:text="${usuario.rg}"></strong>
+                </div>
+                <div class="data-item" style="grid-column: 1 / -1;">
+                    <span class="data-label">Endereço Residencial</span>
+                    <strong class="data-value" th:text="${usuario.endereco}"></strong>
+                </div>
+                <div class="data-item">
+                    <span class="data-label">Profissão</span>
+                    <strong class="data-value" th:text="${usuario.profissao}"></strong>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="account-section">
+            <h2 class="section-title">Comprovação de Renda</h2>
+            
+            <div class="employer-list">
+                <!-- Empregador 1 (Sempre visível) -->
+                <div class="employer-card">
+                    <div class="emp-info">
+                        <span class="data-label">Empregador Principal</span>
+                        <strong class="data-value" th:text="${usuario.empregador1}"></strong>
+                    </div>
+                    <div class="emp-income">
+                        <span class="data-label">Rendimento Mensal</span>
+                        <strong class="data-value income-value">R$ <span th:text="${usuario.rendimento1}"></span></strong>
+                    </div>
+                </div>
+
+                <!-- Empregador 2 (Condicional) -->
+                <div class="employer-card" th:if="${usuario.empregador2 != null and usuario.empregador2 != ''}">
+                    <div class="emp-info">
+                        <span class="data-label">Empregador Secundário</span>
+                        <strong class="data-value" th:text="${usuario.empregador2}"></strong>
+                    </div>
+                    <div class="emp-income">
+                        <span class="data-label">Rendimento Mensal</span>
+                        <strong class="data-value income-value">R$ <span th:text="${usuario.rendimento2}"></span></strong>
+                    </div>
+                </div>
+
+                <!-- Empregador 3 (Condicional) -->
+                <div class="employer-card" th:if="${usuario.empregador3 != null and usuario.empregador3 != ''}">
+                    <div class="emp-info">
+                        <span class="data-label">Empregador Terciário</span>
+                        <strong class="data-value" th:text="${usuario.empregador3}"></strong>
+                    </div>
+                    <div class="emp-income">
+                        <span class="data-label">Rendimento Mensal</span>
+                        <strong class="data-value income-value">R$ <span th:text="${usuario.rendimento3}"></span></strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Conta | Locação Premium</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}" href="/css/app.css">
+</head>
+<body>
+
+<div class="header">
+    <a class="logo" href="/pedidos/">AluguelCar</a>
+
+    <div class="nav">
+        <a class="btn btn-secondary btn-sm" href="/pedidos/">Catálogo</a>
+        <a class="btn btn-primary btn-sm" href="/login">Acessar Conta</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="form-box" style="max-width: 720px;">
+        <div class="form-header">
+            <h1>Criar nova conta</h1>
+            <p>Preencha os dados abaixo para iniciar sua jornada conosco.</p>
+        </div>
+
+        <!-- Alerta de Erro -->
+        <div th:if="${erro != null and erro != ''}" class="alert-error">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="min-width: 20px;">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span th:text="${erro}"></span>
+        </div>
+
+        <form action="/cadastro" method="post">
+            
+            <!-- SEÇÃO 1: Dados Pessoais -->
+            <h3 style="font-size: 16px; margin-bottom: 16px; color: var(--text-primary);">1. Informações Pessoais</h3>
+            
+            <div class="form-group">
+                <label for="nome">Nome Completo</label>
+                <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" required>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" name="email" placeholder="nome@exemplo.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="senha">Senha de Acesso</label>
+                    <input type="password" id="senha" name="senha" placeholder="••••••••" required>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="cpf">CPF</label>
+                    <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" required>
+                </div>
+                <div class="form-group">
+                    <label for="rg">RG</label>
+                    <input type="text" id="rg" name="rg" placeholder="00.000.000-0" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="endereco">Endereço Completo</label>
+                <input type="text" id="endereco" name="endereco" placeholder="Rua, Número, Bairro, Cidade - Estado" required>
+            </div>
+
+            <div class="form-group">
+                <label for="profissao">Profissão Atual</label>
+                <input type="text" id="profissao" name="profissao" placeholder="Sua ocupação principal" required>
+            </div>
+
+            <hr class="divider" style="margin: 32px 0;">
+
+            <!-- SEÇÃO 2: Dados Financeiros -->
+            <h3 style="font-size: 16px; margin-bottom: 16px; color: var(--text-primary);">2. Comprovação de Renda</h3>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 24px;">Estes dados são utilizados exclusivamente para a análise de crédito da sua locação.</p>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="empregador1">Empregador Principal *</label>
+                    <input type="text" id="empregador1" name="empregador1" placeholder="Nome da empresa" required>
+                </div>
+                <div class="form-group">
+                    <label for="rendimento1">Rendimento Mensal (R$) *</label>
+                    <input type="number" id="rendimento1" step="0.01" name="rendimento1" placeholder="Ex: 5000.00" required>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="empregador2">Empregador Secundário <span style="font-weight: 400; color: #94a3b8;">(Opcional)</span></label>
+                    <input type="text" id="empregador2" name="empregador2" placeholder="Nome da empresa">
+                </div>
+                <div class="form-group">
+                    <label for="rendimento2">Rendimento (R$)</label>
+                    <input type="number" id="rendimento2" step="0.01" name="rendimento2" placeholder="Ex: 2500.00">
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="empregador3">Empregador Terciário <span style="font-weight: 400; color: #94a3b8;">(Opcional)</span></label>
+                    <input type="text" id="empregador3" name="empregador3" placeholder="Nome da empresa">
+                </div>
+                <div class="form-group">
+                    <label for="rendimento3">Rendimento (R$)</label>
+                    <input type="number" id="rendimento3" step="0.01" name="rendimento3" placeholder="Ex: 1000.00">
+                </div>
+            </div>
+
+            <button class="btn btn-primary" type="submit" style="width: 100%; margin-top: 16px; padding: 14px;">
+                Finalizar Cadastro
+            </button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
